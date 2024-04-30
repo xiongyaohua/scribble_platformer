@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=4 uid="uid://i84eef18h13h"]
+[gd_scene load_steps=11 format=3 uid="uid://i84eef18h13h"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_6io41"]
 [ext_resource type="Texture2D" uid="uid://duedmc1i720x2" path="res://assets/kenney_scribble-platformer/spritesheet_retina.png" id="1_7tkqt"]
@@ -7,43 +7,149 @@
 radius = 39.0
 height = 120.0
 
+[sub_resource type="Animation" id="Animation_4yasl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyAnchor/Body:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BodyAnchor/Body:rotation")
+tracks/1/interp = 3
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_uok1a"]
+resource_name = "idle"
+length = 0.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyAnchor/Body:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_8gaff"]
+resource_name = "walk"
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyAnchor/Body:rotation")
+tracks/0/interp = 3
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 2.63901, 1),
+"update": 0,
+"values": [0.0, 0.174533, 3.48787e-16]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w2703"]
+_data = {
+"RESET": SubResource("Animation_4yasl"),
+"idle": SubResource("Animation_uok1a"),
+"walk": SubResource("Animation_8gaff")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a74sk"]
+animation = &"walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d2h1n"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_8dflb"]
+graph_offset = Vector2(-175.777, 88.1564)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_d2h1n")
+nodes/Animation/position = Vector2(70, 150)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_a74sk")
+"nodes/Animation 2/position" = Vector2(70, 330)
+node_connections = [&"output", 0, &"Animation 2"]
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_6io41")
 
-[node name="Body" type="Sprite2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -60.5)
+shape = SubResource("CapsuleShape2D_p7p05")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_w2703")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeBlendTree_8dflb")
+anim_player = NodePath("../AnimationPlayer")
+parameters/current_length = 1.0
+parameters/current_position = 0.308611
+parameters/current_delta = 0.005551
+parameters/Animation/current_length = 0.5
+parameters/Animation/current_position = 0.413284
+parameters/Animation/current_delta = 0.00833333
+"parameters/Animation 2/current_length" = 1.0
+"parameters/Animation 2/current_position" = 0.308611
+"parameters/Animation 2/current_delta" = 0.005551
+parameters/output/current_length = 1.0
+parameters/output/current_position = 0.308611
+parameters/output/current_delta = 0.005551
+
+[node name="BodyAnchor" type="Marker2D" parent="."]
+
+[node name="Body" type="Sprite2D" parent="BodyAnchor"]
 position = Vector2(0, -60.5)
 texture = ExtResource("1_7tkqt")
 region_enabled = true
 region_rect = Rect2(1174, 514, 83, 123)
 
-[node name="Hat" type="Sprite2D" parent="Body"]
+[node name="Hat" type="Sprite2D" parent="BodyAnchor/Body"]
 position = Vector2(1, -60)
 texture = ExtResource("1_7tkqt")
 region_enabled = true
 region_rect = Rect2(1025, 166, 127, 57)
 
-[node name="HandLeft" type="Sprite2D" parent="Body"]
-z_index = -1
-position = Vector2(56, 7.5)
-texture = ExtResource("1_7tkqt")
-region_enabled = true
-region_rect = Rect2(1201, 1074, 31, 29)
-
-[node name="Weapon" type="Sprite2D" parent="Body/HandLeft"]
+[node name="Weapon" type="Sprite2D" parent="BodyAnchor/Body"]
 z_index = 1
-position = Vector2(7.62939e-06, 1)
-rotation = 1.26666
+position = Vector2(56, 8.5)
+rotation = 1.49815
 texture = ExtResource("1_7tkqt")
 region_enabled = true
 region_rect = Rect2(933, 529, 54, 222)
 
-[node name="HandRight" type="Sprite2D" parent="Body"]
-z_index = 1
-position = Vector2(-48, 42.5)
+[node name="HandLeft" type="Sprite2D" parent="BodyAnchor/Body/Weapon"]
+z_index = -1
+position = Vector2(-0.954109, -0.299461)
+rotation = -1.26666
 texture = ExtResource("1_7tkqt")
 region_enabled = true
 region_rect = Rect2(1201, 1074, 31, 29)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -60.5)
-shape = SubResource("CapsuleShape2D_p7p05")
+[node name="HandRight" type="Sprite2D" parent="BodyAnchor/Body/Weapon"]
+z_index = 1
+position = Vector2(1.29479, 109.409)
+rotation = -1.26666
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(1201, 1074, 31, 29)
