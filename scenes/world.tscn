@@ -42,7 +42,7 @@ texture_region_size = Vector2i(128, 128)
 6:6/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_k1v2w"]
-tile_size = Vector2i(128, 127)
+tile_size = Vector2i(122, 122)
 physics_layer_0/collision_layer = 1
 physics_layer_0/physics_material = SubResource("PhysicsMaterial_qnnp2")
 sources/1 = SubResource("TileSetAtlasSource_hrrfn")
