@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://i84eef18h13h"]
+[gd_scene load_steps=13 format=3 uid="uid://i84eef18h13h"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_6io41"]
 [ext_resource type="Texture2D" uid="uid://duedmc1i720x2" path="res://assets/kenney_scribble-platformer/spritesheet_retina.png" id="1_7tkqt"]
@@ -33,6 +33,18 @@ tracks/1/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BodyAnchor/Body/Weapon:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(46, 10.5)]
+}
 
 [sub_resource type="Animation" id="Animation_uok1a"]
 resource_name = "idle"
@@ -42,7 +54,7 @@ tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/path = NodePath("BodyAnchor/Body:flip_h")
-tracks/0/interp = 1
+tracks/0/interp = 0
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.5),
@@ -67,26 +79,50 @@ tracks/0/keys = {
 "values": [0.0, 0.174533, 3.48787e-16]
 }
 
+[sub_resource type="Animation" id="Animation_x7afd"]
+resource_name = "attack"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyAnchor/Body/Weapon:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3663, 0.5663, 0.7992),
+"transitions": PackedFloat32Array(1, 4.92458, 1, 1),
+"update": 0,
+"values": [Vector2(42, 18.5), Vector2(12, 25.5), Vector2(59, 17.5), Vector2(42, 18.5)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_w2703"]
 _data = {
 "RESET": SubResource("Animation_4yasl"),
+"attack": SubResource("Animation_x7afd"),
 "idle": SubResource("Animation_uok1a"),
 "walk": SubResource("Animation_8gaff")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_a74sk"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_jtvag"]
 animation = &"walk"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d2h1n"]
-animation = &"idle"
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ydfne"]
+animation = &"attack"
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_8dflb"]
-graph_offset = Vector2(-175.777, 88.1564)
-nodes/Animation/node = SubResource("AnimationNodeAnimation_d2h1n")
-nodes/Animation/position = Vector2(70, 150)
-"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_a74sk")
-"nodes/Animation 2/position" = Vector2(70, 330)
-node_connections = [&"output", 0, &"Animation 2"]
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_5m7q4"]
+filter_enabled = true
+filters = ["BodyAnchor/Body/Weapon:position"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_1o7jl"]
+graph_offset = Vector2(-270.736, 9.07306)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_ydfne")
+nodes/Animation/position = Vector2(20, 80)
+"nodes/Animation 2/node" = SubResource("AnimationNodeAnimation_jtvag")
+"nodes/Animation 2/position" = Vector2(20, 220)
+nodes/OneShot/node = SubResource("AnimationNodeOneShot_5m7q4")
+nodes/OneShot/position = Vector2(240, 140)
+nodes/output/position = Vector2(410, 140)
+node_connections = [&"OneShot", 0, &"Animation 2", &"OneShot", 1, &"Animation", &"output", 0, &"OneShot"]
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_6io41")
@@ -101,20 +137,26 @@ libraries = {
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource("AnimationNodeBlendTree_8dflb")
+tree_root = SubResource("AnimationNodeBlendTree_1o7jl")
 anim_player = NodePath("../AnimationPlayer")
 parameters/current_length = 1.0
-parameters/current_position = 0.308611
-parameters/current_delta = 0.005551
-parameters/Animation/current_length = 0.5
-parameters/Animation/current_position = 0.413284
-parameters/Animation/current_delta = 0.00833333
+parameters/current_position = 0.46259
+parameters/current_delta = 0.00833333
+parameters/Animation/current_length = 0.8
+parameters/Animation/current_position = 0.8
+parameters/Animation/current_delta = 0.0118072
 "parameters/Animation 2/current_length" = 1.0
-"parameters/Animation 2/current_position" = 0.308611
-"parameters/Animation 2/current_delta" = 0.005551
+"parameters/Animation 2/current_position" = 0.46259
+"parameters/Animation 2/current_delta" = 0.00833333
+parameters/OneShot/current_length = 1.0
+parameters/OneShot/current_position = 0.46259
+parameters/OneShot/current_delta = 0.00833333
+parameters/OneShot/active = false
+parameters/OneShot/internal_active = false
+parameters/OneShot/request = 0
 parameters/output/current_length = 1.0
-parameters/output/current_position = 0.308611
-parameters/output/current_delta = 0.005551
+parameters/output/current_position = 0.46259
+parameters/output/current_delta = 0.00833333
 
 [node name="BodyAnchor" type="Marker2D" parent="."]
 
@@ -132,7 +174,7 @@ region_rect = Rect2(1025, 166, 127, 57)
 
 [node name="Weapon" type="Sprite2D" parent="BodyAnchor/Body"]
 z_index = 1
-position = Vector2(56, 8.5)
+position = Vector2(46, 10.5)
 rotation = 1.49815
 texture = ExtResource("1_7tkqt")
 region_enabled = true

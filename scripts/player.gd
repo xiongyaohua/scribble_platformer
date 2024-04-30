@@ -7,6 +7,7 @@ const JUMP_VELOCITY = -700.0
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var body_anchor: Marker2D = $BodyAnchor
 @onready var body: Sprite2D = $BodyAnchor/Body
+@onready var animation_tree: AnimationTree = $AnimationTree
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -27,3 +28,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	
+func _unhandled_input(event: InputEvent) -> void:
+	if Input.is_action_pressed("attack"):
+		animation_tree["parameters/OneShot/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
+

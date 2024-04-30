@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=4 uid="uid://b7q237xjogg6v"]
+[gd_scene load_steps=8 format=4 uid="uid://b7q237xjogg6v"]
 
 [ext_resource type="Texture2D" uid="uid://duedmc1i720x2" path="res://assets/kenney_scribble-platformer/spritesheet_retina.png" id="1_xe14a"]
 [ext_resource type="PackedScene" uid="uid://i84eef18h13h" path="res://scenes/player.tscn" id="2_0hbgm"]
+[ext_resource type="Script" path="res://scripts/kill_zone.gd" id="3_p13cm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qnnp2"]
 
@@ -47,14 +48,30 @@ physics_layer_0/collision_layer = 1
 physics_layer_0/physics_material = SubResource("PhysicsMaterial_qnnp2")
 sources/1 = SubResource("TileSetAtlasSource_hrrfn")
 
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_fwc8e"]
+
 [node name="World" type="Node2D"]
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.5, 0.5)
-
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD4////AQAGAAgAAAD5////AQAGAAgAAAD6////AQAGAAgAAAD7////AQAFAAUAAAD8////AQAFAAUAAAD9////AQAFAAUAAAD+////AQAGAAgAAAD/////AQAGAAgAAAAAAP//AQAFAAUAAAABAP//AQAFAAUAAAACAP//AQAFAAUAAAADAP//AQAGAAgAAAAEAP//AQAIAAUAAAAFAP//AQAGAAgAAAAGAP//AQAGAAgAAAAHAP//AQAGAAgAAAD4/wAAAQAGAAgAAAD5/wAAAQAGAAgAAAD6/wAAAQAGAAgAAAD7/wAAAQAFAAcAAAD8/wAAAQAGAAgAAAD9/wAAAQAGAAgAAAD+/wAAAQAGAAgAAAD//wAAAQAGAAgAAAAAAAAAAQAGAAgAAAABAAAAAQAGAAgAAAACAAAAAQAGAAgAAAADAAAAAQAGAAgAAAAEAAAAAQAGAAgAAAAFAAAAAQAGAAgAAAAGAAAAAQAGAAgAAAAHAAAAAQAGAAgAAAAHAAEAAQAGAAgAAAAGAAEAAQAGAAgAAAAFAAEAAQAGAAgAAAAEAAEAAQAGAAgAAAADAAEAAQAGAAgAAAACAAEAAQAGAAgAAAABAAEAAQAGAAgAAAAAAAEAAQAGAAgAAAD//wEAAQAGAAgAAAD+/wEAAQAGAAgAAAD9/wEAAQAGAAgAAAD8/wEAAQAGAAgAAAD7/wEAAQAGAAgAAAD6/wEAAQAGAAgAAAD5/wEAAQAGAAgAAAD4/wEAAQAGAAgAAAA=")
+tile_map_data = PackedByteArray("AAD4////AQAGAAgAAAD5////AQAGAAgAAAD6////AQAGAAgAAAD7////AQAFAAUAAAD8////AQAFAAUAAAD9////AQAFAAUAAAD+////AQAGAAgAAAD/////AQAGAAgAAAAAAP//AQAFAAUAAAABAP//AQAFAAUAAAACAP//AQAFAAUAAAADAP//AQAGAAgAAAAEAP//AQAGAAgAAAAFAP//AQAGAAgAAAAGAP//AQAGAAgAAAAHAP//AQAGAAgAAAD4/wAAAQAGAAgAAAD5/wAAAQAGAAgAAAD6/wAAAQAGAAgAAAD7/wAAAQAFAAcAAAD8/wAAAQAGAAgAAAD9/wAAAQAGAAgAAAD+/wAAAQAGAAgAAAD//wAAAQAGAAgAAAAAAAAAAQAGAAgAAAABAAAAAQAGAAgAAAACAAAAAQAGAAgAAAADAAAAAQAGAAgAAAAEAAAAAQAGAAgAAAAFAAAAAQAGAAgAAAAGAAAAAQAGAAgAAAAHAAAAAQAGAAgAAAAHAAEAAQAGAAgAAAAGAAEAAQAGAAgAAAAFAAEAAQAGAAgAAAAEAAEAAQAGAAgAAAADAAEAAQAGAAgAAAACAAEAAQAGAAgAAAABAAEAAQAGAAgAAAAAAAEAAQAGAAgAAAD//wEAAQAGAAgAAAD+/wEAAQAGAAgAAAD9/wEAAQAGAAgAAAD8/wEAAQAGAAgAAAD7/wEAAQAGAAgAAAD6/wEAAQAGAAgAAAD5/wEAAQAGAAgAAAD4/wEAAQAGAAgAAAAIAP3/AQAGAAgAAAAJAP3/AQAGAAgAAAAKAP3/AQAGAAgAAAALAP3/AQAGAAgAAAAMAP3/AQAGAAgAAAAGAPr/AQAGAAgAAAAFAPr/AQAGAAgAAAAEAPr/AQAGAAgAAAADAPr/AQAGAAgAAAACAPr/AQAGAAgAAAABAPr/AQAGAAgAAAALAPr/AQAGAAgAAAAMAPr/AQAGAAgAAAAOAPr/AQAGAAgAAAANAPr/AQAGAAgAAAAPAPr/AQAGAAgAAAA=")
 tile_set = SubResource("TileSet_k1v2w")
 
 [node name="Player" parent="." instance=ExtResource("2_0hbgm")]
 position = Vector2(-43, -128)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(43, 128)
+zoom = Vector2(0.5, 0.5)
+limit_bottom = 600
+limit_smoothed = true
+position_smoothing_enabled = true
+
+[node name="KillZone" type="Area2D" parent="."]
+position = Vector2(0, 685)
+script = ExtResource("3_p13cm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KillZone"]
+scale = Vector2(10, 10)
+shape = SubResource("WorldBoundaryShape2D_fwc8e")
+
+[connection signal="body_entered" from="KillZone" to="KillZone" method="_on_body_entered"]
