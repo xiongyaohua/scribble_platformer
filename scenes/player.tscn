@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=4 uid="uid://i84eef18h13h"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_6io41"]
+[ext_resource type="Texture2D" uid="uid://duedmc1i720x2" path="res://assets/kenney_scribble-platformer/spritesheet_retina.png" id="1_7tkqt"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p7p05"]
+radius = 39.0
+height = 120.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_6io41")
+
+[node name="Body" type="Sprite2D" parent="."]
+position = Vector2(0, -60.5)
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(1174, 514, 83, 123)
+
+[node name="Hat" type="Sprite2D" parent="Body"]
+position = Vector2(1, -60)
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(1025, 166, 127, 57)
+
+[node name="HandLeft" type="Sprite2D" parent="Body"]
+z_index = -1
+position = Vector2(56, 7.5)
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(1201, 1074, 31, 29)
+
+[node name="Weapon" type="Sprite2D" parent="Body/HandLeft"]
+z_index = 1
+position = Vector2(7.62939e-06, 1)
+rotation = 1.26666
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(933, 529, 54, 222)
+
+[node name="HandRight" type="Sprite2D" parent="Body"]
+z_index = 1
+position = Vector2(-48, 42.5)
+texture = ExtResource("1_7tkqt")
+region_enabled = true
+region_rect = Rect2(1201, 1074, 31, 29)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -60.5)
+shape = SubResource("CapsuleShape2D_p7p05")
