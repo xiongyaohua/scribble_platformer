@@ -62,9 +62,9 @@ position = Vector2(-43, -128)
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(43, 128)
 zoom = Vector2(0.5, 0.5)
-limit_bottom = 600
-limit_smoothed = true
+limit_bottom = 1000
 position_smoothing_enabled = true
+position_smoothing_speed = 100.0
 
 [node name="KillZone" type="Area2D" parent="."]
 position = Vector2(0, 685)
